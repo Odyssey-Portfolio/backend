@@ -28,6 +28,9 @@ namespace OdysseyPortfolio_Libraries.Helpers
             CreateMap<UpdateBlogRequest, Entities.Blog>()
                 .ForMember(blog => blog.Id, opt => opt.Ignore())
                 .ReverseMap();
+            CreateMap<CreateCommentRequest, Entities.Comment>()
+                .ForMember(blog => blog.Id, opt => opt.Ignore())
+                .ReverseMap();
         }
     }
 }
