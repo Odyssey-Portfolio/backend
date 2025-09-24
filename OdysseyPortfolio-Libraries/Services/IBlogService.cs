@@ -11,6 +11,7 @@ namespace OdysseyPortfolio_Libraries.Services
     public interface IBlogService
     {
         Task<ServiceResponse> Get(GetBlogsRequest request);
+        Task<ServiceResponse> GetById(GetBlogByIdRequest request);
         Task<ServiceResponse> Create(CreateBlogRequest request);
         Task<ServiceResponse> Update(UpdateBlogRequest request);
         Task<ServiceResponse> Delete(DeleteBlogRequest request);

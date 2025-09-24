@@ -19,6 +19,10 @@ namespace OdysseyPortfolio_Libraries.Helpers
                 .ReverseMap();
             CreateMap<Blog, GetBlogDto>()
                 .ReverseMap();
+            CreateMap<Blog, GetBlogDtoAdmin>()
+                .ReverseMap();
+            CreateMap<Blog, GetBlogByIdDto>()
+               .ReverseMap();
             CreateMap<RegisterRequest, Entities.User>()
                 .ReverseMap();
             CreateMap<UpdateBlogRequest, Entities.Blog>()

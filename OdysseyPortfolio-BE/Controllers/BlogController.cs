@@ -25,6 +25,18 @@ namespace OdysseyPortfolio_BE.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("{blogId}")]
+        public async Task<IActionResult> GetBlogById([FromRoute] string blogId)
+        {
+            GetBlogByIdRequest request = new GetBlogByIdRequest()
+            {
+                Id = blogId,
+                UserRole = User.FindFirst(ClaimTypes.Role)?.Value
+            };         
+            var result = await _blogService.GetById(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
         [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<IActionResult> CreateBlog([FromForm] CreateBlogRequest request)

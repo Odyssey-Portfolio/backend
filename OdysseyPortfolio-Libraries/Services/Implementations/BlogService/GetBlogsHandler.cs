@@ -20,7 +20,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.BlogService
         private IMapper _mapper;
         private GetBlogsRequest? _request;
         private IEnumerable<Blog>? _blogs;
-        private List<GetBlogDto>? _getBlogs;
+        private List<object>? _getBlogs;
 
         public GetBlogsHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -33,16 +33,28 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.BlogService
             {
                 _request = request;
                 GetBlogsBySearchParams();
-                RemoveDeletedBlogsForNonAdminUsers();
-                MapBlogsToGetBlogs();
-                ApplyPagination();                
-                return GetBlogsSuccessResponse();
+                if (_request.UserRole == UserRoles.Admin) return HandleBlogsForAdminUsers();
+                return HandleBlogsForNonAdminUsers();
             }
             catch (Exception ex)
             {
                 return InternalServerErrorResponse(ex);
             }
         }
+        private ServiceResponse HandleBlogsForAdminUsers()
+        {
+            MapBlogsToGetBlogs<GetBlogDtoAdmin>();
+            ApplyPagination();
+            return GetBlogsSuccessResponse();
+        }
+        private ServiceResponse HandleBlogsForNonAdminUsers()
+        {
+            RemoveDeletedBlogsForNonAdminUsers();
+            MapBlogsToGetBlogs<GetBlogDto>();
+            ApplyPagination();
+            return GetBlogsSuccessResponse();
+        }
+
         private void GetBlogsBySearchParams()
         {
             if (_request?.Keyword == null) _blogs = _unitOfWork.BlogRepository.Get();
@@ -50,12 +62,12 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.BlogService
                 blog.Title.ToLower().Contains(_request.Keyword));
             _blogs = _blogs.OrderByDescending(b => b.Id);
         }
-        private void MapBlogsToGetBlogs()
+        private void MapBlogsToGetBlogs<T>()
         {
-            _getBlogs = new List<GetBlogDto>();
+            _getBlogs = new List<object>();
             foreach (var blog in _blogs)
             {
-                var getBlog = _mapper.Map<GetBlogDto>(blog);
+                var getBlog = _mapper.Map<T>(blog);
                 _getBlogs.Add(getBlog);
             }
         }
@@ -65,10 +77,10 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.BlogService
                .Skip((_request.PageNumber - 1) * _request.PageSize)
                .Take(_request.PageSize)
                .ToList();
-        }     
+        }
         private void RemoveDeletedBlogsForNonAdminUsers()
         {
-            if(_request.UserRole != UserRoles.Admin)
+            if (_request.UserRole != UserRoles.Admin)
                 _blogs = _blogs.Where(blog => !blog.IsDeleted);
         }
         private ServiceResponse GetBlogsSuccessResponse()
