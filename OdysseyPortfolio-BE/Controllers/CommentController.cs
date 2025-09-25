@@ -25,5 +25,11 @@ namespace OdysseyPortfolio_BE.Controllers
             var result = await _commentService.Create(request);
             return StatusCode(result.StatusCode, result);
         }
+        [HttpGet]        
+        public async Task<IActionResult> GetComments([FromQuery] GetCommentsRequest request)
+        {            
+            var result = await _commentService.Get(request);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

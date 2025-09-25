@@ -29,7 +29,10 @@ namespace OdysseyPortfolio_Libraries.Helpers
                 .ForMember(blog => blog.Id, opt => opt.Ignore())
                 .ReverseMap();
             CreateMap<CreateCommentRequest, Entities.Comment>()
-                .ForMember(blog => blog.Id, opt => opt.Ignore())
+                .ForMember(comment => comment.Id, opt => opt.Ignore())
+                .ReverseMap();
+            CreateMap<Entities.Comment, GetCommentsDto>()
+                .ForMember(comment => comment.UserName, opt => opt.Ignore())
                 .ReverseMap();
         }
     }

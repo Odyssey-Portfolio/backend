@@ -11,5 +11,6 @@ namespace OdysseyPortfolio_Libraries.Services
     public interface ICommentService
     {
         Task<ServiceResponse> Create(CreateCommentRequest request);
+        Task<ServiceResponse> Get(GetCommentsRequest request);
     }
 }

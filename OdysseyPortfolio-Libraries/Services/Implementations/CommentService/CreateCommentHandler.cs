@@ -54,6 +54,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
         {
             _comment = _mapper.Map<Comment>(_request);
             _comment.DisabledReason = "";
+            _comment.CreatedAt = DateTime.Now.ToUniversalTime();
             _comment.Id = EntityUtils.GenerateEntityId<Comment>();                        
         }
         private void SaveComment()

@@ -14,6 +14,7 @@ namespace OdysseyPortfolio_Libraries.Entities
         public string DisabledReason { get; set; } = "";
         public string BlogId { get; set; } = null!;
         public string UserId { get; set; } = null!;
+        public DateTime CreatedAt { get; set; } 
         public Blog Blog { get; set; } = null!;
         public User User { get; set; } = null!;
 

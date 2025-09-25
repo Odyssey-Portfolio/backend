@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OdysseyPortfolio_Libraries.Migrations;
@@ -11,9 +12,11 @@ using OdysseyPortfolio_Libraries.Migrations;
 namespace OdysseyPortfolio_Libraries.Migrations
 {
     [DbContext(typeof(OdysseyPortfolioDbContext))]
-    partial class OdysseyPortfolioDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250925000336_Comment_AddCreatedAtDate")]
+    partial class Comment_AddCreatedAtDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

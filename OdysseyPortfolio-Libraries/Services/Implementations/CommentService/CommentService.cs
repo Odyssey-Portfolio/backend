@@ -16,6 +16,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
     public class CommentService : ICommentService
     {
         private CreateCommentHandler _createCommentHandler;
+        private GetCommentsHandler _getCommentsHandler;
         private readonly UserManager<User>? _userManager;
         private IUnitOfWork? _unitOfWork;
         private IMapper? _mapper;
@@ -31,10 +32,17 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
             var result = await _createCommentHandler.Handle(request);
             return result;
         }
+        public async Task<ServiceResponse> Get(GetCommentsRequest request)
+        {
+            var result = await _getCommentsHandler.Handle(request);
+            return result;
+        }
         private void InitializeServices()
         {
-            _createCommentHandler = new CreateCommentHandler(_unitOfWork, _userManager, _mapper);            
+            _createCommentHandler = new CreateCommentHandler(_unitOfWork, _userManager, _mapper);
+            _getCommentsHandler = new GetCommentsHandler(_unitOfWork, _userManager, _mapper);
         }
 
+  
     }
 }
