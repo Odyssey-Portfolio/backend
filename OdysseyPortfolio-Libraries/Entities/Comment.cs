@@ -17,6 +17,7 @@ namespace OdysseyPortfolio_Libraries.Entities
         public DateTime CreatedAt { get; set; } 
         public Blog Blog { get; set; } = null!;
         public User User { get; set; } = null!;
+        public ICollection<CommentLike> CommentLikes { get; } = new List<CommentLike>();
 
     }
 }

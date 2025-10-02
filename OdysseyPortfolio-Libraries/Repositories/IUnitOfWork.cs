@@ -14,6 +14,7 @@ namespace OdysseyPortfolio_Libraries.Repositories
         IGenericRepository<Comment> CommentRepository { get; }
         IGenericRepository<Image> ImageRepository { get; }
         IGenericRepository<User> UserRepository { get; }
+        IGenericRepository<CommentLike> CommentLikeRepository { get; }
         void Save();
     }
 

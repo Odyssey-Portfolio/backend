@@ -19,13 +19,13 @@ namespace OdysseyPortfolio_Libraries.Migrations
 
         public virtual DbSet<Blog> Blogs { get; set; } = null!;
         public virtual DbSet<Image> Images { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;       
+        public virtual DbSet<User> Users { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Initializes default values of the Identity Entity (User). 
             //This includes Id.
-            base.OnModelCreating(modelBuilder); 
-            
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<User>(user =>
             {
                 user.HasMany(e => e.Blogs)
@@ -33,6 +33,10 @@ namespace OdysseyPortfolio_Libraries.Migrations
                     .HasForeignKey(e => e.UserId)
                     .IsRequired(false);
                 user.HasMany(e => e.Comments)
+                    .WithOne(e => e.User)
+                    .HasForeignKey(e => e.UserId)
+                    .IsRequired(false);
+                user.HasMany(e => e.CommentLikes)
                     .WithOne(e => e.User)
                     .HasForeignKey(e => e.UserId)
                     .IsRequired(false);
@@ -50,9 +54,13 @@ namespace OdysseyPortfolio_Libraries.Migrations
                     .IsRequired(false);
             });
 
-
-
-
+            modelBuilder.Entity<Comment>(blog =>
+            {
+                blog.HasMany(e => e.CommentLikes)
+                    .WithOne(e => e.Comment)
+                    .HasForeignKey(e => e.CommentId)
+                    .IsRequired(false);
+            });
         }
     }
 }

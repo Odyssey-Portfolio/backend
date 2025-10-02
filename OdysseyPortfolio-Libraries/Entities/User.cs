@@ -18,5 +18,6 @@ namespace OdysseyPortfolio_Libraries.Entities
         public DateTime OutOfCommentLimitTime { get; set; } 
         public ICollection<Comment> Comments { get; } = new List<Comment>();
         public ICollection<Blog> Blogs { get; } = new List<Blog>();
+        public ICollection<CommentLike> CommentLikes{ get; } = new List<CommentLike>();
     }
 }

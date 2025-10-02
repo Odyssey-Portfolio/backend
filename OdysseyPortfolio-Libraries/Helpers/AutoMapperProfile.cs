@@ -34,6 +34,8 @@ namespace OdysseyPortfolio_Libraries.Helpers
             CreateMap<Entities.Comment, GetCommentsDto>()
                 .ForMember(comment => comment.UserName, opt => opt.Ignore())
                 .ReverseMap();
+            CreateMap<AddCommentLikeRequest, CommentLike>()                
+                .ReverseMap();
         }
     }
 }

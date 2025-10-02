@@ -61,7 +61,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
         {
             await DeductCommentLimit();
             MapCommentRequestToComment();
-            //SaveComment();
+            SaveComment();
             return CreateCommentSuccessResponse();
         }
         private async Task<ServiceResponse> HandleOutOfCommentLimit()
@@ -79,7 +79,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
                 await RefillCommentLimit();
                 await DeductCommentLimit();
                 MapCommentRequestToComment();
-                //SaveComment();
+                SaveComment();
                 return CreateCommentSuccessResponse();
 
             }

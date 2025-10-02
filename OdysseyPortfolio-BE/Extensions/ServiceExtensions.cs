@@ -10,6 +10,7 @@ using OdysseyPortfolio_Libraries.Migrations;
 using OdysseyPortfolio_Libraries.Repositories;
 using OdysseyPortfolio_Libraries.Services;
 using OdysseyPortfolio_Libraries.Services.Implementations.BlogService;
+using OdysseyPortfolio_Libraries.Services.Implementations.CommentLikeService;
 using OdysseyPortfolio_Libraries.Services.Implementations.CommentService;
 using OdysseyPortfolio_Libraries.Services.Implementations.UserService;
 
@@ -36,6 +37,7 @@ namespace OdysseyPortfolio_BE.Extensions
             services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ICommentLikeService, CommentLikeService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return services;
         }
