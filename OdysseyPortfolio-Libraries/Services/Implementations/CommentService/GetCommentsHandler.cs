@@ -17,12 +17,13 @@ using static System.Reflection.Metadata.BlobBuilder;
 namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
 {
     public class GetCommentsHandler
-    {        
+    {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
         private UserManager<User> _userManager;
         private GetCommentsRequest? _request;
         private IEnumerable<Comment> _comments;
+        private int _totalPages;
         private List<GetCommentsDto> _commentsDto;
         private User? _user;
         public GetCommentsHandler(IUnitOfWork unitOfWork, UserManager<User> userManager, IMapper mapper)
@@ -39,20 +40,21 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
                 if (_request.BlogId == null) return BlogIdNotProvidedResponse();
                 GetCommentsBySearchParams();
                 ApplyPagination();
-                await MapCommentsToGetComments();                
+                await MapCommentsToGetComments();
                 return GetCommentsSuccessResponse();
             }
             catch (Exception ex)
             {
                 return InternalServerErrorResponse(ex);
             }
-        }      
+        }
 
         private void GetCommentsBySearchParams()
-        {            
-            _comments = _unitOfWork.CommentRepository.Get(comment=>
+        {
+            _comments = _unitOfWork.CommentRepository.Get(comment =>
                 comment.BlogId.Equals(_request.BlogId));
             _comments = _comments.OrderByDescending(b => b.Id);
+            _totalPages = (int)Math.Ceiling((double)_comments.Count() / _request.PageSize);
         }
         private void ApplyPagination()
         {
@@ -66,29 +68,35 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
             _commentsDto = new List<GetCommentsDto>();
             foreach (var comment in _comments)
             {
-                var commentDto = _mapper.Map<GetCommentsDto>(comment);                
+                var commentDto = _mapper.Map<GetCommentsDto>(comment);
                 commentDto.ElapsedTime = Utils.GetTimeAgo(comment.CreatedAt, DateTime.Now);
                 var user = await _userManager.FindByIdAsync(comment.UserId);
                 commentDto.UserName = user?.UserName;
                 _commentsDto.Add(commentDto);
             }
         }
-        
         private ServiceResponse GetCommentsSuccessResponse()
         {
             return new ServiceResponse()
             {
                 StatusCode = ResponseCodes.SUCCESS,
                 Message = "Successfully retrieved all comments of the blog.",
-                ReturnData = _commentsDto
+                ReturnData = new
+                {
+                    pageNumber = _request?.PageNumber,
+                    pageSize = _request?.PageSize,
+                    totalPages = _totalPages,
+                    comments = _commentsDto
+                }
             };
+
         }
         private ServiceResponse BlogIdNotProvidedResponse()
         {
             return new ServiceResponse()
             {
                 StatusCode = ResponseCodes.BAD_REQUEST,
-                Message = "BlogId is not provided, please try again.",                
+                Message = "BlogId is not provided, please try again.",
             };
         }
         private ServiceResponse InternalServerErrorResponse(Exception ex)

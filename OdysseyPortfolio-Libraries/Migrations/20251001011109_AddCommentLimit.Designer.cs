@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OdysseyPortfolio_Libraries.Migrations;
@@ -11,9 +12,11 @@ using OdysseyPortfolio_Libraries.Migrations;
 namespace OdysseyPortfolio_Libraries.Migrations
 {
     [DbContext(typeof(OdysseyPortfolioDbContext))]
-    partial class OdysseyPortfolioDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251001011109_AddCommentLimit")]
+    partial class AddCommentLimit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,9 +293,6 @@ namespace OdysseyPortfolio_Libraries.Migrations
 
                     b.Property<int>("NumberOfCommentsLeft")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("OutOfCommentLimitTime")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");

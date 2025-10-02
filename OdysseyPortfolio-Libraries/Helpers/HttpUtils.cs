@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using OdysseyPortfolio_Libraries.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace OdysseyPortfolio_Libraries.Helpers
                     context.Response.Cookies.Append("accessToken", token,
                         new CookieOptions
                         {
-                            Expires = DateTimeOffset.UtcNow.AddHours(3),
+                            Expires = DateTimeOffset.UtcNow.AddHours(AuthConstants.COOKIE_TIMEOUT_IN_HOURS),
                             HttpOnly = true,
                             IsEssential = true,
                             Secure = true,

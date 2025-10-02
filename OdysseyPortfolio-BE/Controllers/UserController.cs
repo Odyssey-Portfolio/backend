@@ -28,12 +28,15 @@ namespace OdysseyPortfolio_BE.Controllers
         {
             var result = await _userService.Login(request);
             var loggedInUser = result.ReturnData as LoggedInUserDto;
-            SetTokensInsideCookie(new SetTokensInsideCookieOptions()
+            if (loggedInUser != null)
             {
-                HttpContext = HttpContext,
-                Token = loggedInUser.Token,
-                TokenType = TokenTypes.ACCESS_TOKEN
-            });
+                SetTokensInsideCookie(new SetTokensInsideCookieOptions()
+                {
+                    HttpContext = HttpContext,
+                    Token = loggedInUser.Token,
+                    TokenType = TokenTypes.ACCESS_TOKEN
+                });
+            }
             loggedInUser.Token = null;
             return StatusCode(result.StatusCode, result);
         }
@@ -41,10 +44,10 @@ namespace OdysseyPortfolio_BE.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var result = await _userService.Register(request);            
+            var result = await _userService.Register(request);
             return StatusCode(result.StatusCode, result);
         }
-        
+
         [Route("logout")]
         [HttpPost]
         public async Task<IActionResult> Logout()
