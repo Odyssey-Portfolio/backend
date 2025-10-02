@@ -20,7 +20,7 @@ namespace OdysseyPortfolio_Libraries.Helpers
                     context.Response.Cookies.Append("accessToken", token,
                         new CookieOptions
                         {
-                            Expires = DateTimeOffset.UtcNow.AddMinutes(5),
+                            Expires = DateTimeOffset.UtcNow.AddHours(3),
                             HttpOnly = true,
                             IsEssential = true,
                             Secure = true,
