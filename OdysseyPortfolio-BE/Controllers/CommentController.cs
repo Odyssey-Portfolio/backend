@@ -27,7 +27,8 @@ namespace OdysseyPortfolio_BE.Controllers
         }
         [HttpGet]        
         public async Task<IActionResult> GetComments([FromQuery] GetCommentsRequest request)
-        {            
+        {
+            request.UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = await _commentService.Get(request);
             return StatusCode(result.StatusCode, result);
         }

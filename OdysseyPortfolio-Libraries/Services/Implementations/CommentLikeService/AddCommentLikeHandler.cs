@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata;
 using OdysseyPortfolio_Libraries.Constants;
+using OdysseyPortfolio_Libraries.DTOs.Comment;
 using OdysseyPortfolio_Libraries.Entities;
 using OdysseyPortfolio_Libraries.Helpers;
 using OdysseyPortfolio_Libraries.Payloads.Request;
@@ -9,6 +11,7 @@ using OdysseyPortfolio_Libraries.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +22,8 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
         private readonly UserManager<User> _userManager;
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
-        private AddCommentLikeRequest? _request;        
+        private AddCommentLikeRequest? _request;
+        private CommentLikeDto _commentLikeDto;
         private User? _user;
         public AddCommentLikeHandler(IUnitOfWork unitOfWork, UserManager<User> userManager, IMapper mapper)
         {
@@ -35,6 +39,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
                 bool isUserValid = await CheckUserValidity();
                 if (!isUserValid) return InvalidUserResponse();
                 SaveCommentLike();
+                _commentLikeDto = await GetCommentLikeFromCommentId(_request.CommentId);
                 return AddCommentLikeSuccessResponse();
             }
             catch (Exception ex)
@@ -48,7 +53,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
             if (_user != null) return true;
             return false;
         }
-    
+
         private void SaveCommentLike()
         {
             var commentLike = _mapper.Map<CommentLike>(_request);
@@ -57,12 +62,27 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
             _unitOfWork.CommentLikeRepository.Insert(commentLike);
             _unitOfWork.Save();
         }
-        private ServiceResponse AddCommentLikeSuccessResponse()
+        private async Task<CommentLikeDto> GetCommentLikeFromCommentId(string commentId)
         {
+            var commentLikes = _unitOfWork.CommentLikeRepository.Get(like => like.CommentId == commentId);
+            var commentLikedByUser = commentLikes.FirstOrDefault(like => like.UserId == _request.UserId);
+            return new CommentLikeDto
+            {
+                Liked = commentLikedByUser == null ? false : true,
+                Likes = commentLikes.Count()
+            };
+        }
+        private ServiceResponse AddCommentLikeSuccessResponse()
+        {            
             return new ServiceResponse()
             {
                 StatusCode = ResponseCodes.CREATED,
                 Message = $"Successfully added a Like for Comment with ID: {_request!.CommentId}.",
+                ReturnData = new
+                {
+                    liked = _commentLikeDto.Liked,
+                    likes = _commentLikeDto.Likes,
+                }
             };
         }
 
@@ -73,7 +93,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
                 StatusCode = ResponseCodes.BAD_REQUEST,
                 Message = "Either the email or password is invalid. Please try again."
             };
-        }        
+        }
         private ServiceResponse InternalServerErrorResponse(Exception ex)
         {
             return new ServiceResponse()

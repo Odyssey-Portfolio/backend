@@ -8,7 +8,7 @@ namespace OdysseyPortfolio_Libraries.Payloads.Request
 {
     public class RemoveCommentLikeRequest
     {
-        public string CommentLikeId { get; set; } = null!;
+        public string CommentId { get; set; } = null!;
         public string UserId { get; set; } = null!;
     }
 }

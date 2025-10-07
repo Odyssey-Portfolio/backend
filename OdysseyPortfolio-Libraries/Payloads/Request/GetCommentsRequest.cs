@@ -11,5 +11,6 @@ namespace OdysseyPortfolio_Libraries.Payloads.Request
         public string BlogId { get; set; } = "";
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 5;     
+        public string UserId { get; set; } 
     }
 }

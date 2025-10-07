@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.AspNetCore.Identity;
 using OdysseyPortfolio_Libraries.Constants;
-using OdysseyPortfolio_Libraries.DTOs;
+using OdysseyPortfolio_Libraries.DTOs.Comment;
 using OdysseyPortfolio_Libraries.Entities;
 using OdysseyPortfolio_Libraries.Helpers;
 using OdysseyPortfolio_Libraries.Payloads.Request;
@@ -69,11 +70,23 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
             foreach (var comment in _comments)
             {
                 var commentDto = _mapper.Map<GetCommentsDto>(comment);
+                commentDto.CommentId = comment.Id;
                 commentDto.ElapsedTime = Utils.GetTimeAgo(comment.CreatedAt, DateTime.Now);
                 var user = await _userManager.FindByIdAsync(comment.UserId);
                 commentDto.UserName = user?.UserName;
+                commentDto.CommentLikeDto = await GetCommentLikeFromComment(comment);
                 _commentsDto.Add(commentDto);
             }
+        }
+        private async Task<CommentLikeDto> GetCommentLikeFromComment(Comment comment)
+        {
+            var commentLikes = _unitOfWork.CommentLikeRepository.Get(like => like.CommentId == comment.Id);
+            var commentLikedByUser = commentLikes.FirstOrDefault(like => like.UserId == _request.UserId);
+            return new CommentLikeDto
+            {
+                Liked = commentLikedByUser == null ? false : true,
+                Likes = commentLikes.Count()
+            };
         }
         private ServiceResponse GetCommentsSuccessResponse()
         {
