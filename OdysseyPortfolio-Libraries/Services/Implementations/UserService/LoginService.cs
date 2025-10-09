@@ -85,7 +85,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.UserService
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:Issuer"],
                 audience: _configuration["JWT:Audience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.UtcNow.AddHours(AuthConstants.TOKEN_TIMEOUT_IN_HOURS),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );

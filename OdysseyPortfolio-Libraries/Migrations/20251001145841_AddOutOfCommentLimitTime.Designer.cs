@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OdysseyPortfolio_Libraries.Migrations;
@@ -11,9 +12,11 @@ using OdysseyPortfolio_Libraries.Migrations;
 namespace OdysseyPortfolio_Libraries.Migrations
 {
     [DbContext(typeof(OdysseyPortfolioDbContext))]
-    partial class OdysseyPortfolioDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251001145841_AddOutOfCommentLimitTime")]
+    partial class AddOutOfCommentLimitTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,29 +225,6 @@ namespace OdysseyPortfolio_Libraries.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("OdysseyPortfolio_Libraries.Entities.CommentLike", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CommentId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("CommentLike");
-                });
-
             modelBuilder.Entity("OdysseyPortfolio_Libraries.Entities.Image", b =>
                 {
                     b.Property<string>("Id")
@@ -423,21 +403,6 @@ namespace OdysseyPortfolio_Libraries.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OdysseyPortfolio_Libraries.Entities.CommentLike", b =>
-                {
-                    b.HasOne("OdysseyPortfolio_Libraries.Entities.Comment", "Comment")
-                        .WithMany("CommentLikes")
-                        .HasForeignKey("CommentId");
-
-                    b.HasOne("OdysseyPortfolio_Libraries.Entities.User", "User")
-                        .WithMany("CommentLikes")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("OdysseyPortfolio_Libraries.Entities.Image", b =>
                 {
                     b.HasOne("OdysseyPortfolio_Libraries.Entities.Blog", "Blog")
@@ -456,16 +421,9 @@ namespace OdysseyPortfolio_Libraries.Migrations
                     b.Navigation("Images");
                 });
 
-            modelBuilder.Entity("OdysseyPortfolio_Libraries.Entities.Comment", b =>
-                {
-                    b.Navigation("CommentLikes");
-                });
-
             modelBuilder.Entity("OdysseyPortfolio_Libraries.Entities.User", b =>
                 {
                     b.Navigation("Blogs");
-
-                    b.Navigation("CommentLikes");
 
                     b.Navigation("Comments");
                 });

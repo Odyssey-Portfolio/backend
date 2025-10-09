@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using OdysseyPortfolio_Libraries.DTOs;
+using OdysseyPortfolio_Libraries.DTOs.Comment;
 using OdysseyPortfolio_Libraries.Entities;
 using OdysseyPortfolio_Libraries.Payloads.Request;
 using System;
@@ -27,6 +28,14 @@ namespace OdysseyPortfolio_Libraries.Helpers
                 .ReverseMap();
             CreateMap<UpdateBlogRequest, Entities.Blog>()
                 .ForMember(blog => blog.Id, opt => opt.Ignore())
+                .ReverseMap();
+            CreateMap<CreateCommentRequest, Entities.Comment>()
+                .ForMember(comment => comment.Id, opt => opt.Ignore())
+                .ReverseMap();
+            CreateMap<Entities.Comment, GetCommentsDto>()
+                .ForMember(comment => comment.UserName, opt => opt.Ignore())
+                .ReverseMap();
+            CreateMap<AddCommentLikeRequest, CommentLike>()                
                 .ReverseMap();
         }
     }

@@ -16,6 +16,7 @@ namespace OdysseyPortfolio_Libraries.Repositories
         private IGenericRepository<Comment> _commentRepository { get; set; }
         private IGenericRepository<Image> _imageRepository { get; set; }
         private IGenericRepository<User> _userRepository { get; set; }
+        private IGenericRepository<CommentLike> _commentLikeRepository { get; set; }
         public UnitOfWork(OdysseyPortfolioDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -47,6 +48,13 @@ namespace OdysseyPortfolio_Libraries.Repositories
             get
             {
                 return _userRepository ??= new GenericRepository<User>(_dbContext!);
+            }
+        }
+        public IGenericRepository<CommentLike> CommentLikeRepository
+        {
+            get
+            {
+                return _commentLikeRepository ??= new GenericRepository<CommentLike>(_dbContext!);
             }
         }
 

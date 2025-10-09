@@ -43,15 +43,15 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.BlogService
         }
         private ServiceResponse HandleBlogsForAdminUsers()
         {
-            MapBlogsToGetBlogs<GetBlogDtoAdmin>();
             ApplyPagination();
+            MapBlogsToGetBlogs<GetBlogDtoAdmin>();            
             return GetBlogsSuccessResponse();
         }
         private ServiceResponse HandleBlogsForNonAdminUsers()
         {
             RemoveDeletedBlogsForNonAdminUsers();
-            MapBlogsToGetBlogs<GetBlogDto>();
             ApplyPagination();
+            MapBlogsToGetBlogs<GetBlogDto>();            
             return GetBlogsSuccessResponse();
         }
 

@@ -76,6 +76,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.UserService
         {
             _user = _mapper.Map<User>(_request);
             _user.UserName = _request?.Email;
+            _user.NumberOfCommentsLeft = CommentConstants.USER_DAILY_COMMENT_LIMIT;
             var result = await _userManager.CreateAsync(_user, _request!.Password);
 
             if (!result.Succeeded)
