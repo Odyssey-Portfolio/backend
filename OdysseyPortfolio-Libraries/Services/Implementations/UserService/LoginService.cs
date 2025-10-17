@@ -103,6 +103,8 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.UserService
                     {
                         Id = _user.Id,
                         Name = _user.Name,
+                        Email = _user.Email,
+                        Avatar = _user.Avatar,
                         Roles = _userRoles.ToArray(),
                         Token = _jwtTokenString,
                     }

@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using OdysseyPortfolio_Libraries.Constants;
 using OdysseyPortfolio_Libraries.DTOs;
 using OdysseyPortfolio_Libraries.Entities;
 using OdysseyPortfolio_Libraries.Helpers;
 using OdysseyPortfolio_Libraries.Payloads.Request;
 using OdysseyPortfolio_Libraries.Services;
+using System.Security.Claims;
 using static OdysseyPortfolio_Libraries.Helpers.HttpUtils;
 using static OdysseyPortfolio_Libraries.Services.Implementations.UserService.LoginService;
 using LoginRequest = OdysseyPortfolio_Libraries.Payloads.Request.LoginRequest;
@@ -45,6 +48,25 @@ namespace OdysseyPortfolio_BE.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             var result = await _userService.Register(request);
+            return StatusCode(result.StatusCode, result);
+        }
+        [Route("update")]
+        [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.User}")]
+        [HttpPost]
+        public async Task<IActionResult> Update([FromBody] UpdateUserDetailsRequest request)
+        {
+            request.UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = await _userService.Update(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [Route("update/avatar")]
+        [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.User}")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateAvatar([FromForm] UpdateUserAvatarRequest request)
+        {
+            request.UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = await _userService.UpdateAvatar(request);
             return StatusCode(result.StatusCode, result);
         }
 

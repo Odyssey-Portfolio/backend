@@ -37,6 +37,8 @@ namespace OdysseyPortfolio_Libraries.Helpers
                 .ReverseMap();
             CreateMap<AddCommentLikeRequest, CommentLike>()                
                 .ReverseMap();
+            CreateMap<UpdateUserDetailsRequest, Entities.User>()                
+                .ReverseMap();                
         }
     }
 }
