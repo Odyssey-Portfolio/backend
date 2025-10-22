@@ -71,10 +71,11 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
             {
                 var commentDto = _mapper.Map<GetCommentsDto>(comment);
                 commentDto.CommentId = comment.Id;
-                commentDto.ElapsedTime = Utils.GetTimeAgo(comment.CreatedAt, DateTime.Now);
+                commentDto.ElapsedTime = Utils.GetTimeAgo(comment.CreatedAt, DateTime.Now.ToUniversalTime());
                 var user = await _userManager.FindByIdAsync(comment.UserId);
-                commentDto.UserName = user?.UserName;
+                commentDto.UserName = user?.Name;                
                 commentDto.CommentLikeDto = await GetCommentLikeFromComment(comment);
+                commentDto.Avatar = user.Avatar;
                 _commentsDto.Add(commentDto);
             }
         }

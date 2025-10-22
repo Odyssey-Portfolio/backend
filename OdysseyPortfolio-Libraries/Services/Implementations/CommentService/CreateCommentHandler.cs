@@ -68,13 +68,14 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
         {
             if (OneDayHasElapsed())
             {
-            /*
-                * Prevents OutOfCommentLimitTime from becoming old, breaking OneDayHasElapsed 
-                * function. Example:
-                * OutOfCommentLimitTime equals Sep 30, and currentDate = Oct 2.
-                => Oct 2/3/4/5... - Sep 30 > 1 (always true) => Date is always refilled.              
-            */
+                /*
+                    * Prevents OutOfCommentLimitTime from becoming old, breaking OneDayHasElapsed 
+                    * function. Example:
+                    * OutOfCommentLimitTime equals Sep 30, and currentDate = Oct 2.
+                    => Oct 2/3/4/5... - Sep 30 > 1 (always true) => Date is always refilled.              
+                */
                 _user.OutOfCommentLimitTime = DateTime.Now.ToUniversalTime();
+                _user.OutOfCommentLimitTimeApplied = false;
                 await _userManager.UpdateAsync(_user);
                 await RefillCommentLimit();
                 await DeductCommentLimit();
@@ -83,14 +84,16 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
                 return CreateCommentSuccessResponse();
 
             }
+            if (_user.OutOfCommentLimitTimeApplied) return OutOfCommentLimitResponse();
             _user.OutOfCommentLimitTime = DateTime.Now.ToUniversalTime();
+            _user.OutOfCommentLimitTimeApplied = true;
             await _userManager.UpdateAsync(_user);
             return OutOfCommentLimitResponse();
         }
         private bool OneDayHasElapsed()
         {
             var outOfCommentLimitTime = _user.OutOfCommentLimitTime;
-            var currentTime = DateTime.Now;
+            var currentTime = DateTime.Now.ToUniversalTime();
             return currentTime - outOfCommentLimitTime >= TimeSpan.FromDays(1);
         }
         private async Task RefillCommentLimit()
@@ -98,7 +101,7 @@ namespace OdysseyPortfolio_Libraries.Services.Implementations.CommentService
             _user.NumberOfCommentsLeft = CommentConstants.USER_DAILY_COMMENT_LIMIT;
             await _userManager.UpdateAsync(_user);
         }
-        
+
         private async Task DeductCommentLimit()
         {
             _user.NumberOfCommentsLeft--;

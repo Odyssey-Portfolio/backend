@@ -13,6 +13,7 @@ namespace OdysseyPortfolio_Libraries.DTOs.Comment
         public string UserName { get; set; }    
         public string ElapsedTime { get; set; }
         public string Content { get; set; }
+        public string Avatar { get; set; }
         public CommentLikeDto CommentLikeDto { get; set; }
     }
 }
